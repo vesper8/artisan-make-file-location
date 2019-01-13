@@ -112,4 +112,67 @@ trait TraitCommand
 
         return parent::getOptions();
     }
+
+    /**
+     * Get the destination class path.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function getPath($name)
+    {
+        if (config('amfl.use_module', false)) {
+            $vendor = config('amfl.module.vendor');
+            $package = config('amfl.module.package');
+            $name = str_replace("{$vendor}\\${package}\\", '', $name);
+
+            return base_path(config('amfl.module.srcPath')) . '/' . str_replace('\\', '/', $name) . '.php';
+        } else {
+            $name = Str::replaceFirst($this->rootNamespace(), '', $name);
+
+            return $this->laravel['path'] . '/' . str_replace('\\', '/', $name) . '.php';
+        }
+    }
+
+    /**
+     * Parse the class name and format according to the root namespace.
+     *
+     * @param  string  $name
+     * @return string
+     */
+    protected function qualifyClass($name)
+    {
+        if (config('amfl.use_module', false)) {
+            $vendor = config('amfl.module.vendor');
+            $package = config('amfl.module.package');
+
+            $name = ltrim($name, '\\/');
+
+            $rootNamespace = "{$vendor}\\${package}";
+
+            if (Str::startsWith($name, $rootNamespace)) {
+                return $name;
+            }
+
+            $name = str_replace('/', '\\', $name);
+
+            return $this->qualifyClass(
+                $this->getDefaultNamespace(trim($rootNamespace, '\\')) . '\\' . $name
+            );
+        } else {
+            $name = ltrim($name, '\\/');
+
+            $rootNamespace = $this->rootNamespace();
+
+            if (Str::startsWith($name, $rootNamespace)) {
+                return $name;
+            }
+
+            $name = str_replace('/', '\\', $name);
+
+            return $this->qualifyClass(
+                $this->getDefaultNamespace(trim($rootNamespace, '\\')) . '\\' . $name
+            );
+        }
+    }
 }
