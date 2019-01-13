@@ -21,7 +21,11 @@ class FactoryMakeCommand extends OriginalFactoryMakeCommand
             ['\\', '/'], '', $this->argument('name')
         );
 
-        return $this->amflCustomPath($this->laravel->basePath(), $name);
+        if (config('amfl.use_module', false)) {
+            return $this->amflCustomPath(config('amfl.module.dbPath'), $name);
+        } else {
+            return $this->amflCustomPath($this->laravel->basePath(), $name);
+        }
     }
 
     /**

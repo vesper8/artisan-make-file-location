@@ -27,7 +27,11 @@ class MigrateMakeCommand extends OriginalMigrateMakeCommand
      */
     protected function getMigrationPath(): string
     {
-        $basePath = $this->laravel->basePath();
+        if (config('amfl.use_module', false)) {
+            $basePath = config('amfl.module.dbPath');
+        } else {
+            $basePath = $this->laravel->basePath();
+        }
 
         if (! is_null($targetPath = $this->input->getOption('path'))) {
             return $basePath.'/'.$targetPath;

@@ -15,6 +15,7 @@ return [
     'module' => [
         'vendor' => 'Vendor',
         'package' => 'Package',
+        'dbPath' => 'modules/vendor/package',
         'srcPath' => 'modules/vendor/package/src',
     ],
 
