@@ -2,6 +2,7 @@
 
 namespace DRL\AMFL;
 
+use Illuminate\Support\Str;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
